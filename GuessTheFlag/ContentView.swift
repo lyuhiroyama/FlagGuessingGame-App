@@ -13,8 +13,9 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var score = 0
     
-    @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria",
-                     "Poland", "Russia", "Spain", "UK", "US"].shuffled()
+    static let allCountries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria",
+                        "Poland", "Russia", "Spain", "UK", "US"]
+    @State private var countries = allCountries.shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
     
     @State private var questionNum = 0
@@ -115,11 +116,13 @@ struct ContentView: View {
     }
     
     func askQuestion () {
+        countries.remove(at: correctAnswer)
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
     }
     
     func reset() {
+        countries = ContentView.allCountries //Could also be "Self.allCountries"
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
         questionNum = 0
