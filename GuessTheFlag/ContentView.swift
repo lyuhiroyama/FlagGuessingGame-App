@@ -22,7 +22,6 @@ struct ContentView: View {
     
     var body: some View {
         
-        
         ZStack {
             RadialGradient(stops: [
                 .init(color: Color(red: 0.1, green: 0.2, blue: 0.65), location: 0.3),
@@ -72,40 +71,47 @@ struct ContentView: View {
                     .font(.title.weight(.bold))
                     .foregroundColor(.white)
                 
+                Text("Tries remaining: \(8-questionNum)")
+                    .font(.title.weight(.light))
+                    .foregroundColor(.white)
+                
                 Spacer()
             }
             .padding()
         }
         .alert(scoreTitle, isPresented: $showingScore) {
-            Button("Continue", action: askQuestion)
+            Button("Continue") {
+                askQuestion()
+                if questionNum == 8 {
+                    eightQuestions = true
+                }
+            }
         } message: {
             Text("Your score is \(score)/8")
         }
+        
         .alert("That's it!", isPresented: $eightQuestions) {
             Button("Play again", action: reset)
+        } message: {
+            Text("Your final score: \(score)/8")
         }
-    
         
     }
+    
     
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
             scoreTitle = "Correct!"
             score += 1
-            
-            
         } else {
-            scoreTitle = "Wrong! That's the flag of \(countries[number])"
+            scoreTitle = """
+                        Wrong!
+                        That's the flag of \(countries[number])
+                        """
         }
-        
         showingScore = true
         questionNum += 1
         print(questionNum)
-        
-        if questionNum == 8 {
-            eightQuestions = true
-        }
-        
     }
     
     func askQuestion () {
@@ -117,6 +123,7 @@ struct ContentView: View {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
         questionNum = 0
+        score = 0
     }
 }
 
